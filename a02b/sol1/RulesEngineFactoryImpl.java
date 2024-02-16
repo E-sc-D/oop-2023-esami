@@ -1,5 +1,6 @@
 package a02b.sol1;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,12 +16,17 @@ public class RulesEngineFactoryImpl implements RulesEngineFactory {
 
     // Utility to replace from 'source' the element in index-position with 'toReplace'
     private <T> List<T> replaceAtPosition(int index, List<T> source, List<T> newElements){
-        var l = new LinkedList<>(source);
+        /* var l = new LinkedList<>(source);
         l.remove(index);
         var it = newElements.listIterator(newElements.size());
         while (it.hasPrevious()){
             l.add(index, it.previous());
         }
+        return l; */
+
+        var l = new ArrayList<>(source.subList(0, index));
+        l.addAll(newElements);
+        l.addAll(source.subList(index + 1, source.size()));
         return l;
     }
 
@@ -44,6 +50,13 @@ public class RulesEngineFactoryImpl implements RulesEngineFactory {
                     .flatMap(rule -> applyRule(rule, input).stream().flatMap(list -> applyRules(rules, list)).distinct())
                     .distinct();
     }
+    private <T> List<List<T>> applyRules2(List<Pair<T, List<T>>> rules, List<T> input){
+        List<List<T>> list = new ArrayList<>();
+        for (Pair<T, List<T>> rule : rules) {
+            list.addAll(applyRule(rule, input));
+        }
+        return list;
+    }
 
     private <T> RulesEngine<T> fromRules(List<Pair<T, List<T>>> rules){
         return new RulesEngine<T>() {
@@ -51,7 +64,8 @@ public class RulesEngineFactoryImpl implements RulesEngineFactory {
 
             @Override
             public void resetInput(List<T> input) {
-                this.iterator = applyRules(rules, input).iterator();
+                /* this.iterator = applyRules(rules, input).iterator(); */
+                this.iterator = applyRules2(rules, input).iterator();
             }
 
             @Override

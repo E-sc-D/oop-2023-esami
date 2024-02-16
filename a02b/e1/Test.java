@@ -3,6 +3,7 @@ package a02b.e1;
 import static org.junit.Assert.*;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Test {
 
@@ -35,7 +36,7 @@ public class Test {
 
 	@org.junit.Before
 	public void initFactory() {
-		// this.factory = new RulesEngineFactoryImpl();
+		this.factory = new RulesEngineFactoryImpl();
 	}
 
 	@org.junit.Test
@@ -138,4 +139,6 @@ public class Test {
 		assertEquals(List.of("c", "d", "c", "d"), res.nextSolution());
 		assertFalse(res.hasOtherSolutions());
 	}
+
+	
 }
